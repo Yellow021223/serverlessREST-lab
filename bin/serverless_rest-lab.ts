@@ -1,6 +1,19 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
 import { ServerlessRestLabStack } from '../lib/serverless_rest-lab-stack';
+const movieCastsTable = new dynamodb.Table(this, "MovieCastTable", {
+  billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+  partitionKey: { name: "movieId", type: dynamodb.AttributeType.NUMBER },
+  sortKey: { name: "actorName", type: dynamodb.AttributeType.STRING },
+  removalPolicy: cdk.RemovalPolicy.DESTROY,
+  tableName: "MovieCast",
+});
+
+movieCastsTable.addLocalSecondaryIndex({
+  indexName: "roleIx",
+  sortKey: { name: "roleName", type: dynamodb.AttributeType.STRING },
+});
+
 
 const app = new cdk.App();
 new ServerlessRestLabStack(app, 'ServerlessRestLabStack', {
