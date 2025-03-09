@@ -1,8 +1,23 @@
 import * as cdk from 'aws-cdk-lib';
 import * as apig from "aws-cdk-lib/aws-apigateway";
 
+
 import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
+   //... other lambda functions ...
+
+   const newMovieFn = new lambdanode.NodejsFunction(this, "AddMovieFn", {
+    architecture: lambda.Architecture.ARM_64,
+    runtime: lambda.Runtime.NODEJS_22_X,
+    entry: `${__dirname}/../lambdas/addMovie.ts`,
+    timeout: cdk.Duration.seconds(10),
+    memorySize: 128,
+    environment: {
+      TABLE_NAME: moviesTable.tableName,
+      REGION: "eu-west-1",
+    },
+  });
+
 
 export class ServerlessRestLabStack extends cdk.Stack {
       // Permissions
